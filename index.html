@@ -378,6 +378,11 @@
               <span class="carousel-control-next-icon" aria-hidden="true"></span>
               <span class="sr-only">Next</span>
             </a>
+            
+              <button id="carouselButton" class="btn btn-sm btn-danger">
+                <i class="fa fa-pause"></i>
+              </button>
+            
           </div>
         </div>
       </div>
@@ -532,6 +537,34 @@
     <script src="node_modules/jquery/dist/jquery.slim.min.js"></script>
     <script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <script>
+      $(document).ready(() => {
+        // carousel setting
+        $("#myCarousel").carousel({
+          interval: 2000,
+        });
+
+        // carousel pause and play
+        $("#carouselButton").click(() => {
+          var targetIcon = $("#carouselButton").children("i")
+          var isPause = targetIcon.hasClass("fa-pause")
+
+          if(isPause) {
+            $("#myCarousel").carousel("pause");
+            targetIcon.removeClass("fa-pause")
+            targetIcon.addClass("fa-play")
+          }else {
+            $("#myCarousel").carousel("cycle");
+            targetIcon.removeClass("fa-play")
+            targetIcon.addClass("fa-pause")
+          }
+          
+        });
+        
+      })
+
+    </script>
 
   </body>
 </html>
