@@ -9,6 +9,7 @@
     />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
 
+    <!-- build:css css/main.css -->
     <!-- Bootstrap CSS -->
     <link
       rel="stylesheet"
@@ -23,9 +24,10 @@
       rel="stylesheet"
       href="/node_modules/bootstrap-social/bootstrap-social.css"
     />
-
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/styles.css" />
+    <!-- endbuild -->
+
     <title>Ristorante Con Fusion: About Us</title>
   </head>
 
@@ -49,7 +51,7 @@
         <div class="collapse navbar-collapse" id="navList">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-              <a href="/index.html" class="nav-link">
+              <a href="./index.html" class="nav-link">
                 <span class="fa fa-home"></span> Home
               </a>
             </li>
@@ -65,7 +67,7 @@
             </li>
 
             <li class="nav-item">
-              <a href="/contactus.html" class="nav-link">
+              <a href="./contactus.html" class="nav-link">
                 <span class="fa fa-address-card"></span> Contact
               </a>
             </li>
@@ -100,7 +102,7 @@
       <div class="row">
         <div class="col-12">
           <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/index.html"> Home </a></li>
+            <li class="breadcrumb-item"><a href="./index.html"> Home </a></li>
             <li class="breadcrumb-item active">About</li>
           </ol>
         </div>
@@ -400,10 +402,10 @@
           <div class="col-4 offset-1 col-sm-2">
             <h5>Links</h5>
             <ul class="list-unstyled">
-              <li><a href="/index.html">Home</a></li>
+              <li><a href="./index.html">Home</a></li>
               <li><a href="#">About</a></li>
               <li><a href="#">Menu</a></li>
-              <li><a href="/contactus.html">Contact</a></li>
+              <li><a href="./contactus.html">Contact</a></li>
             </ul>
           </div>
           <div class="col-7 col-sm-5">
@@ -459,9 +461,13 @@
       </div>
     </footer>
 
+    <!-- build:js js/main.js -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS. -->
     <script src="node_modules/jquery/dist/jquery.slim.min.js"></script>
     <script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- custom js -->
+    <script src="/js/script.js"></script>
+    <!-- endbuild -->
   </body>
 </html>

@@ -9,6 +9,7 @@
     />
     <meta http-equiv="x-ua-compatible" content="ie=edge" />
 
+    <!-- build:css css/main.css -->
     <!-- Bootstrap CSS -->
     <link
       rel="stylesheet"
@@ -25,6 +26,8 @@
     />
     <!-- Custom CSS -->
     <link rel="stylesheet" href="/css/styles.css" />
+    <!-- endbuild -->
+
     <title>Ristorante Con Fusion</title>
   </head>
 
@@ -53,7 +56,7 @@
               </a>
             </li>
             <li class="nav-item">
-              <a href="/aboutus.html" class="nav-link">
+              <a href="./aboutus.html" class="nav-link">
                 <span class="fa fa-info"></span> About us
               </a>
             </li>
@@ -64,7 +67,7 @@
             </li>
 
             <li class="nav-item">
-              <a href="/contactus.html" class="nav-link">
+              <a href="./contactus.html" class="nav-link">
                 <span class="fa fa-address-card"></span> Contact
               </a>
             </li>
@@ -517,9 +520,9 @@
             <h5>Links</h5>
             <ul class="list-unstyled">
               <li><a href="#">Home</a></li>
-              <li><a href="/aboutus.html">About</a></li>
+              <li><a href="./aboutus.html">About</a></li>
               <li><a href="#">Menu</a></li>
-              <li><a href="/contactus.html">Contact</a></li>
+              <li><a href="./contactus.html">Contact</a></li>
             </ul>
           </div>
           <div class="col-7 col-sm-4">
@@ -575,57 +578,15 @@
       </div>
     </footer>
 
+    <!-- build:js js/main.js -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS. -->
     <script src="node_modules/jquery/dist/jquery.slim.min.js"></script>
     <script src="node_modules/popper.js/dist/umd/popper.min.js"></script>
     <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <!-- custom js -->
+    <script src="js/script.js" type="text/javascript"></script> 
+    <!-- endbuild -->
 
-    <script>
-      $(document).ready(() => {
-        // --- modal setting
 
-        // login modal
-        $("#login").click(() => {
-          $("#loginModal").modal("show");
-        });
-
-        // reserve modal
-        $("#reserve").click(() => {
-          $("#reserveModal").modal("show");
-        });
-
-        // close modal
-        $(".closeModal").click(() => {
-          let isLoginModal = $("#loginModal").hasClass("show");
-          let isReserveModal = $("#reserveModal").hasClass("show");
-          if (isLoginModal) {
-            $("#loginModal").modal("hide");
-          } else if (isReserveModal) {
-            $("#reserveModal").modal("hide");
-          }
-        });
-
-        // --- carousel setting
-        $("#myCarousel").carousel({
-          interval: 2000,
-        });
-
-        // carousel pause and play
-        $("#carouselButton").click(() => {
-          var targetIcon = $("#carouselButton").children("i");
-          var isPause = targetIcon.hasClass("fa-pause");
-
-          if (isPause) {
-            $("#myCarousel").carousel("pause");
-            targetIcon.removeClass("fa-pause");
-            targetIcon.addClass("fa-play");
-          } else {
-            $("#myCarousel").carousel("cycle");
-            targetIcon.removeClass("fa-play");
-            targetIcon.addClass("fa-pause");
-          }
-        });
-      });
-    </script>
   </body>
 </html>

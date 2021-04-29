@@ -3,18 +3,41 @@
   "version": "1.0.0",
   "description": "This is a website for Ristorante Con Fusion",
   "main": "index.html",
+  "watch": {
+    "scss": {
+      "patterns": [
+        "css"
+      ],
+      "extensions": "scss",
+      "quite": false
+    }
+  },
   "scripts": {
-    "start": "npm run lite",
+    "start": "parallelshell 'npm run watch' 'npm run lite'",
+    "watch": "npm-watch",
+    "build": "npm run clean && parallelshell 'npm run copyfonts' 'npm run imagemin' 'npm run usemin'",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lite": "lite-server",
-    "scss": "node-sass -o css/ css/"
+    "scss": "node-sass -o css/ css/",
+    "clean": "rimraf build",
+    "copyfonts": "copyfiles -f 'node_modules/font-awesome/fonts/*' 'build/fonts'",
+    "imagemin": "imagemin 'img/*' -o 'build/img'",
+    "usemin": "parallelshell 'usemin index.html -d build -o build/index.html --htmlmin true' 'usemin contactus.html -d build -o build/contactus.html --htmlmin true' 'usemin aboutus.html -d build -o build/aboutus.html --htmlmin true'"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "copyfiles": "^2.4.1",
+    "htmlmin": "0.0.7",
+    "imagemin-cli": "^6.0.0",
     "less": "^2.7.2",
     "lite-server": "^2.3.0",
-    "node-sass": "^5.0.0"
+    "node-sass": "^5.0.0",
+    "npm-watch": "^0.9.0",
+    "parallelshell": "^3.0.1",
+    "rimraf": "^3.0.2",
+    "uglifyjs": "^2.4.11",
+    "usemin-cli": "^0.5.1"
   },
   "dependencies": {
     "@fortawesome/fontawesome-free": "^5.15.3",
