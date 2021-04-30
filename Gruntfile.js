@@ -38,7 +38,7 @@ module.exports = (grunt) => {
     // build purpose
     clean: {
       build: {
-        src: ["build/", "dist/"],
+        src: ["build/"],
       },
     },
     copy: {
@@ -118,8 +118,6 @@ module.exports = (grunt) => {
   grunt.registerTask("default", ["browserSync", "watch"]);
 
   // build --- production
-  grunt.registerTask("del", ["clean"]);
-  grunt.registerTask("image", ["imagemin"]);
   grunt.registerTask("build", [
     "clean",
     "copy",
