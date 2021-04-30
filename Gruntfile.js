@@ -20,7 +20,7 @@ module.exports = (grunt) => {
       dev: {
         files: ["css/*.scss"],
         tasks: ["sass"],
-      }
+      },
     },
     browserSync: {
       dev: {
@@ -28,13 +28,41 @@ module.exports = (grunt) => {
           src: ["css/*.css", "js/*.js", "./*.html"],
         },
         options: {
-        watchTask: true,
+          watchTask: true,
           server: "./",
         },
       },
     },
+    clean: {
+      build: {
+        src: ["build/"],
+      },
+    },
+    copy: {
+      build: {
+        expand: true,
+        src: "node_modules/font-awesome/fonts/*",
+        dest: "build/fonts",
+        flatten: true,
+      },
+    },
+    imagemin: {
+      dynamic: {
+        files: [
+          {
+            expand: true,
+            dot: true,
+            cwd: "./img",
+            src: ["*.{png,jpg,gif}"],
+            dest: "build/img",
+          },
+        ],
+      },
+    },
   });
 
-  grunt.registerTask("css", ["sass"]);
   grunt.registerTask("default", ["browserSync", "watch"]);
+  grunt.registerTask("css", ["sass"]);
+  grunt.registerTask("del", ["clean"]);
+  grunt.registerTask("image", ["imagemin"]);
 };
