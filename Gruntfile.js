@@ -3,7 +3,7 @@
 module.exports = (grunt) => {
   require("time-grunt")(grunt);
   require("jit-grunt")(grunt, {
-    useminPrepare: "grunt-usemin"
+    useminPrepare: "grunt-usemin",
   });
 
   grunt.initConfig({
@@ -38,14 +38,20 @@ module.exports = (grunt) => {
     // build purpose
     clean: {
       build: {
-        src: ["build/"],
+        src: ["build/", "dist/"],
       },
     },
     copy: {
-      build: {
+      fonts: {
         expand: true,
         src: "node_modules/font-awesome/fonts/*",
         dest: "build/fonts",
+        flatten: true,
+      },
+      html: {
+        expand: true,
+        src: "*.html",
+        dest: "build/",
         flatten: true,
       },
     },
@@ -64,51 +70,48 @@ module.exports = (grunt) => {
     },
     useminPrepare: {
       foo: {
-        dest: "build",
-        src: ["index.html", "contactus.html", "aboutus.html"]
+        src: ["index.html", "contactus.html", "aboutus.html"],
       },
       options: {
+        dest: "build",
         flow: {
           steps: {
             css: ["cssmin"],
-            js: ["uglify"]
-          }
-        }
-      }
+            js: ["uglify"],
+          },
+        },
+      },
     },
     usemin: {
-      html: ['build/index.html', 'build/contactus.html', 'build/aboutus.html'],
+      html: ["build/index.html", "build/contactus.html", "build/aboutus.html"],
       options: {
-        assetsDirs: ['build', 'build/css', 'build/js']
-      }
+        assetsDirs: ["build", "build/css", "build/js"],
+      },
     },
     htmlmin: {
       build: {
         options: {
-          collapseWhitespace: true
+          collapseWhitespace: true,
         },
-         files: {
-           "build/index.html": "index.html",
-           "build/contactus.html": "contactus.html",
-           "build/aboutus.html": "aboutus.html",
-         }
-      }
+        files: {
+          "build/index.html": "build/index.html",
+          "build/contactus.html": "build/contactus.html",
+          "build/aboutus.html": "build/aboutus.html",
+        },
+      },
     },
     concat: {
       options: {
-        separator: ";"
+        separator: ";",
       },
-      dist: {}
+      build: {},
     },
     uglify: {
-      dist: {}
+      build: {},
     },
     cssmin: {
-      dist: {}
-    }
-    
-
-
+      build: {},
+    },
   });
 
   // development
@@ -121,11 +124,11 @@ module.exports = (grunt) => {
     "clean",
     "copy",
     "imagemin",
-    'useminPrepare',
-    'concat',
-    'cssmin',
-    'uglify',
-    'usemin',
-    'htmlmin'
+    "useminPrepare",
+    "concat",
+    "cssmin",
+    "uglify",
+    "usemin",
+    "htmlmin",
   ]);
 };
