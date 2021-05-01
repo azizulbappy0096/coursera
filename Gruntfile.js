@@ -112,6 +112,24 @@ module.exports = (grunt) => {
     cssmin: {
       build: {},
     },
+    filerev: {
+      options: {
+          encoding: 'utf8',
+          algorithm: 'md5',
+          length: 20
+      },
+
+      release: {
+      // filerev:release hashes(md5) all assets (images, js and css )
+      // in build directory
+          files: [{
+              src: [
+                  'build/js/*.js',
+                  'build/css/*.css',
+              ]
+          }]
+      }
+  },
   });
 
   // development
@@ -126,7 +144,9 @@ module.exports = (grunt) => {
     "concat",
     "cssmin",
     "uglify",
+    "filerev",
     "usemin",
     "htmlmin",
+    
   ]);
 };
