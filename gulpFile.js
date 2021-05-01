@@ -1,5 +1,7 @@
 "use strict";
 
+var path = require("path")
+
 var { src, dest, watch, task, series, parallel } = require("gulp"),
   gulpSass = require("gulp-sass"),
   browserSync = require("browser-sync"),
@@ -62,21 +64,22 @@ task("usemin", () => {
       flatmap((stream, file) => {
         return stream.pipe(
           usemin({
-            css: [rev()],
             html: [
               () =>
                 htmlmin({
                   collapseWhitespace: true,
                 }),
             ],
-            js: [uglify(), rev()],
+            css: [rev()],
+            js: [rev()],
             inlinejs: [uglify()],
             inlinecss: [cleanCss(), "concat"],
           })
         );
       })
     )
-    .pipe(dest("./build"));
+    .pipe(dest("build/"));
+
 });
 
 task("default", parallel("browser-sync", "sass:watch"));
