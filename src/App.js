@@ -1,32 +1,21 @@
 import React from "react";
-import logo from "./logo.svg";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap-social/bootstrap-social.css"
+import "font-awesome/css/font-awesome.min.css"
 import "./App.css";
-import { Navbar, NavbarBrand } from "reactstrap";
-import Menu from "./components/MenuComponent";
+import Main from "./components/MainComponent";
+import { BrowserRouter as Router } from "react-router-dom"
 
-//
-import { DISHES } from "./shared/dishes"
 
 class App extends React.Component {
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      dishes: DISHES
-    }
-  }
-
   render() {
     return (
-      <div className="App">
-        <Navbar dark color="primary">
-          <div className="container">
-            <NavbarBrand>Hello world</NavbarBrand>
-          </div>
-        </Navbar>
-        <Menu dishes={this.state.dishes} />
+      <Router>
+        <div>
+        <Main />
       </div>
+      </Router>
     );
   }
 }
