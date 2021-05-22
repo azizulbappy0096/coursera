@@ -10,6 +10,9 @@ import {
   CardTitle,
 } from "reactstrap";
 
+// components
+import CommentForm from "./CommentFormComponent";
+
 const RenderDish = ({ dish }) => {
   if (dish != null) {
     return (
@@ -50,6 +53,9 @@ function RenderComments({ comments }) {
               </small>
             </li>
           ))}
+          <li>
+            <CommentForm />
+          </li>
         </ul>
       </div>
     );
