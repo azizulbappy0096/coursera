@@ -1,8 +1,16 @@
 import React, { Component } from "react";
 import { NavLink } from "react-router-dom";
 import {
+  Button,
   Collapse,
+  Form,
+  FormGroup,
+  Input,
   Jumbotron,
+  Label,
+  Modal,
+  ModalBody,
+  ModalHeader,
   Nav,
   Navbar,
   NavbarBrand,
@@ -11,21 +19,33 @@ import {
 } from "reactstrap";
 
 export default class Header extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      collapse: false,
+      modal: false,
+    };
+    this.toggleNavbar = this.toggleNavbar.bind(this);
+    this.toggleModal = this.toggleModal.bind(this);
+    this.handleLogin = this.handleLogin.bind(this);
+  }
 
-    constructor(props) {
-        super(props)
-        this.state = {
-            collapse: false
-        }
-        this.toggleNavbar = this.toggleNavbar.bind(this)
-    }
-
-
-    toggleNavbar() {
-        this.setState({
-            collapse: !this.state.collapse
-        })
-    }
+  toggleNavbar() {
+    this.setState({
+      collapse: !this.state.collapse,
+    });
+  }
+  toggleModal() {
+    this.setState({
+      modal: !this.state.modal,
+    });
+  }
+  handleLogin(e) {
+    e.preventDefault()
+    this.toggleModal();
+    let go = `username: ${this.username.value}, password: ${this.password.value}, remember: ${this.remember.checked}`
+    alert(go)
+  }
 
   render() {
     return (
@@ -41,7 +61,11 @@ export default class Header extends Component {
               />
             </NavbarBrand>
             <NavbarToggler onClick={this.toggleNavbar} />
-            <Collapse isOpen={this.state.collapse} navbar className="flex-grow-0">
+            <Collapse
+              isOpen={this.state.collapse}
+              navbar
+              className="flex-grow-0"
+            >
               <Nav navbar>
                 <NavItem>
                   <NavLink to="/home" className="nav-link">
@@ -67,6 +91,12 @@ export default class Header extends Component {
                     Contact Us
                   </NavLink>
                 </NavItem>
+                <NavItem>
+                  <Button outline className="ml-4" onClick={this.toggleModal}>
+                    <span className="fa fa-sign-in"></span>
+                    Login
+                  </Button>
+                </NavItem>
               </Nav>
             </Collapse>
           </div>
@@ -85,6 +115,38 @@ export default class Header extends Component {
             </div>
           </div>
         </Jumbotron>
+        <Modal isOpen={this.state.modal} toggle={this.toggleModal}>
+          <ModalHeader toggle={this.toggleModal}>Login</ModalHeader>
+          <ModalBody>
+            <Form onSubmit={this.handleLogin}>
+              <FormGroup>
+                <Label for="username"> Username </Label>
+                <Input type="text" id="username" innerRef={(e) => this.username = e} />
+              </FormGroup>
+              <FormGroup>
+                <Label for="password"> Password </Label>
+                <Input type="password" id="password" innerRef={(e) => this.password = e} />
+              </FormGroup>
+              <FormGroup check>
+                <Label check>
+                  <Input type="checkbox" name="remember" innerRef={(e) => this.remember = e} />
+                  Remember me?
+                </Label>
+              </FormGroup>
+              <FormGroup>
+                <Button
+                  type="submit"
+                  value="submit"
+                  color="primary"
+                  className="mt-2"
+                >
+                  {" "}
+                  Log in{" "}
+                </Button>
+              </FormGroup>
+            </Form>
+          </ModalBody>
+        </Modal>
       </>
     );
   }
