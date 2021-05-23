@@ -57,7 +57,7 @@ export default class Header extends Component {
                 src="assets/images/logo.png"
                 height="30"
                 width="40"
-                alt="Logo image"
+                alt="Logo"
               />
             </NavbarBrand>
             <NavbarToggler onClick={this.toggleNavbar} />

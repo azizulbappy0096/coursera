@@ -17,6 +17,7 @@ import {
 
 // redux-form
 import { Control, Errors, LocalForm } from "react-redux-form";
+import { Loading } from "./LoadingComponent";
 
 // ---- validators
 const required = (val) => val;
@@ -43,7 +44,7 @@ const RenderDish = ({ dish }) => {
 };
 
 // render dish comments
-function RenderComments({ comments }) {
+function RenderComments({ comments, dishId, addComment }) {
   if (comments != null) {
     return (
       <div className="col-12 col-md-5 mt-5 mx-auto">
@@ -66,7 +67,7 @@ function RenderComments({ comments }) {
             </li>
           ))}
           <li>
-            <CommentForm />
+            <CommentForm dishId={dishId} addComment={addComment} />
           </li>
         </ul>
       </div>
@@ -93,8 +94,7 @@ class CommentForm extends Component {
   }
 
   handleSubmit(val) {
-    let go = JSON.stringify(val);
-    alert(`User Comment: ${go}`);
+    this.props.addComment(this.props.dishId, val.rating, val.author, val.comment)
     this.toggleModal();
   }
 
@@ -125,10 +125,10 @@ class CommentForm extends Component {
                 </Control.select>
               </div>
               <div className="form-group">
-                <Label for="name"> Your Name </Label>
+                <Label for="author"> Your Name </Label>
                 <Control.text
-                  model=".name"
-                  id="name"
+                  model=".author"
+                  id="author"
                   placeholder="Your Name"
                   className="form-control"
                   validators={{
@@ -139,7 +139,7 @@ class CommentForm extends Component {
                 />
                 <Errors
                   className="text-danger"
-                  model=".name"
+                  model=".author"
                   show="touched"
                   messages={{
                     required: "Required",
@@ -171,6 +171,15 @@ class CommentForm extends Component {
 
 // dishDetail component
 const DishDetail = (props) => {
+  if(props.isLoading) {
+    return(  <div className="container d-flex justify-content-center align-items-center" style={{height: "200px"}}>
+    <div className="row">
+    <Loading />
+    </div>
+  </div>)
+  } else if(props.err != null) {
+    return <h1> {props.err} </h1>
+  }else{
   return (
     <div className="container">
       <div className="row mt-2">
@@ -190,10 +199,11 @@ const DishDetail = (props) => {
       </div>
       <div className="row">
         <RenderDish dish={props.dish} />
-        <RenderComments comments={props.comments} />
+        <RenderComments comments={props.comments} dishId={props.dish.id} addComment={props.addComment} />
       </div>
     </div>
   );
+  }
 };
 
 export default DishDetail;

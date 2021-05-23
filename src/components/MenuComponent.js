@@ -1,6 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Card, CardTitle, CardImg, CardImgOverlay, Breadcrumb, BreadcrumbItem } from "reactstrap";
+import {
+  Card,
+  CardTitle,
+  CardImg,
+  CardImgOverlay,
+  Breadcrumb,
+  BreadcrumbItem,
+} from "reactstrap";
+import { Loading } from "./LoadingComponent";
 
 const RenderMenuItem = ({ dish }) => {
   return (
@@ -21,28 +29,35 @@ const Menu = (props) => {
       <RenderMenuItem dish={dish} />
     </div>
   ));
-
-  return (
-    <div className="container">
-      <div className="row mt-2">
-        <Breadcrumb className="w-100">
-          <BreadcrumbItem>
-            <Link to="/home">
-              Home
-            </Link>
-          </BreadcrumbItem>
-          <BreadcrumbItem active>
-           Menu
-          </BreadcrumbItem>
-        </Breadcrumb>
-        <div className="col-12">
-          <h3>Menu</h3>
-          <hr />
+  if (props.isLoading) {
+    return (
+      <div className="container d-flex justify-content-center align-items-center" style={{height: "200px"}}>
+        <div className="row">
+        <Loading />
         </div>
       </div>
-      <div className="row menu">{menu}</div>
-    </div>
-  );
+    );
+  } else if (props.err != null) {
+    return <h1> {props.err} </h1>;
+  } else {
+    return (
+      <div className="container">
+        <div className="row mt-2">
+          <Breadcrumb className="w-100">
+            <BreadcrumbItem>
+              <Link to="/home">Home</Link>
+            </BreadcrumbItem>
+            <BreadcrumbItem active>Menu</BreadcrumbItem>
+          </Breadcrumb>
+          <div className="col-12">
+            <h3>Menu</h3>
+            <hr />
+          </div>
+        </div>
+        <div className="row menu">{menu}</div>
+      </div>
+    );
+  }
 };
 
 export default Menu;

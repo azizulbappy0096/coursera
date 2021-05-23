@@ -16,8 +16,8 @@ import { Control, LocalForm, Errors } from "react-redux-form";
 const required = val => val && val.length
 const maxLength = (len) => (val) => !val || (val.length <= len);
 const minLength = (len) => (val) => !val || (val.length >= len);
-const isNumber = val => !isNaN(Number(val))
-const validEmail = val => /^[a-zA-Z0-9._%+-]+@[a-z]+\.[a-z]{2,4}$/.test(val)
+const isNumber = val => !val || !isNaN(Number(val))
+const validEmail = val => !val || /^[a-zA-Z0-9._%+-]+@[a-z]+\.[a-z]{2,4}$/.test(val)
 
 class Contact extends Component {
   constructor(props) {
@@ -79,7 +79,7 @@ class Contact extends Component {
               >
                 <i className="fa fa-phone"></i> Call
               </a>
-              <a role="button" className="btn btn-info">
+              <a role="button" className="btn btn-info" href="">
                 <i className="fa fa-skype"></i> Skype
               </a>
               <a

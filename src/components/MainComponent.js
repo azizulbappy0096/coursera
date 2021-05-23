@@ -13,6 +13,9 @@ import About from "./AboutComponent";
 // redux
 import { connect } from "react-redux";
 
+// actions
+import { addComment, fetchDishes } from "../redux/ActionCreators"
+
 const mapStateToProps = (state) => ({
   dishes: state.dishes,
   comments: state.comments,
@@ -20,17 +23,28 @@ const mapStateToProps = (state) => ({
   promotions: state.promotions,
 });
 
+const mapDispatchToProps = dispatch => ({
+  addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment)),
+  fetchDishes: () => dispatch(fetchDishes())
+})
+
 class Main extends React.Component {
   constructor(props) {
     super(props);
     this.state = {};
   }
 
+  componentDidMount() {
+    this.props.fetchDishes()
+  }
+
   render() {
     const HomePage = () => {
       return (
         <Home
-          dish={this.props.dishes.filter((dish) => dish.featured)[0]}
+          dish={this.props.dishes.dishes.filter((dish) => dish.featured)[0]}
+          dishLoading={this.props.dishes.isLoading}
+          dishErr={this.props.dishes.error}
           leader={this.props.leaders.filter((leader) => leader.featured)[0]}
           promotion={
             this.props.promotions.filter((promotion) => promotion.featured)[0]
@@ -40,7 +54,8 @@ class Main extends React.Component {
     };
 
     const MenuPage = () => {
-      return <Menu dishes={this.props.dishes} />;
+      return <Menu dishes={this.props.dishes.dishes} isLoading={this.props.dishes.isLoading}
+      err={this.props.dishes.error} />;
     };
 
     const ContactPage = () => {
@@ -51,13 +66,16 @@ class Main extends React.Component {
       return (
         <DishDetail
           dish={
-            this.props.dishes.filter(
+            this.props.dishes.dishes.filter(
               (dish) => dish.id === Number(match.params.dishId)
             )[0]
           }
+          isLoading={this.props.dishes.isLoading}
+          err={this.props.dishes.error}
           comments={this.props.comments.filter(
             (cmnt) => cmnt.dishId === Number(match.params.dishId)
           )}
+          addComment={this.props.addComment}
         />
       );
     };
@@ -83,4 +101,4 @@ class Main extends React.Component {
   }
 }
 
-export default withRouter(connect(mapStateToProps)(Main));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Main));
