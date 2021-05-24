@@ -18,6 +18,7 @@ import {
 // redux-form
 import { Control, Errors, LocalForm } from "react-redux-form";
 import { Loading } from "./LoadingComponent";
+import { baseUrl } from "../redux/baseUrl";
 
 // ---- validators
 const required = (val) => val;
@@ -30,7 +31,11 @@ const RenderDish = ({ dish }) => {
     return (
       <div className="col-12 col-md-5 mt-5 mx-auto">
         <Card>
-          <CardImg width="100%" src={dish.image} atl={dish.name} />
+          <CardImg
+            width="100%"
+            src={baseUrl + "/" + dish.image}
+            atl={dish.name}
+          />
           <CardBody>
             <CardTitle>{dish.name}</CardTitle>
             <CardText>{dish.description}</CardText>
@@ -44,13 +49,15 @@ const RenderDish = ({ dish }) => {
 };
 
 // render dish comments
-function RenderComments({ comments, dishId, addComment }) {
-  if (comments != null) {
+function RenderComments({ comments, err, dishId, addComment }) {
+  if (err) {
+    return <h1> {err} </h1>;
+  } else {
     return (
       <div className="col-12 col-md-5 mt-5 mx-auto">
         <h4> Comments </h4>
         <ul className="list-unstyled">
-          {comments.map((cmnt) => (
+          {comments?.map((cmnt) => (
             <li key={cmnt.id} className="mb-4">
               <p className="m-0"> {cmnt.comment} </p>
               <small>
@@ -72,8 +79,6 @@ function RenderComments({ comments, dishId, addComment }) {
         </ul>
       </div>
     );
-  } else {
-    return <div></div>;
   }
 }
 
@@ -94,7 +99,12 @@ class CommentForm extends Component {
   }
 
   handleSubmit(val) {
-    this.props.addComment(this.props.dishId, val.rating, val.author, val.comment)
+    this.props.addComment(
+      this.props.dishId,
+      val.rating,
+      val.author,
+      val.comment
+    );
     this.toggleModal();
   }
 
@@ -171,38 +181,48 @@ class CommentForm extends Component {
 
 // dishDetail component
 const DishDetail = (props) => {
-  if(props.isLoading) {
-    return(  <div className="container d-flex justify-content-center align-items-center" style={{height: "200px"}}>
-    <div className="row">
-    <Loading />
-    </div>
-  </div>)
-  } else if(props.err != null) {
-    return <h1> {props.err} </h1>
-  }else{
-  return (
-    <div className="container">
-      <div className="row mt-2">
-        <Breadcrumb className="w-100">
-          <BreadcrumbItem>
-            <Link to="/home">Home</Link>
-          </BreadcrumbItem>
-          <BreadcrumbItem>
-            <Link to="/menu">Menu</Link>
-          </BreadcrumbItem>
-          <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
-        </Breadcrumb>
-        <div className="col-12">
-          <h3> {props.dish.name}</h3>
-          <hr />
+  if (props.isLoading) {
+    return (
+      <div
+        className="container d-flex justify-content-center align-items-center"
+        style={{ height: "200px" }}
+      >
+        <div className="row">
+          <Loading />
         </div>
       </div>
-      <div className="row">
-        <RenderDish dish={props.dish} />
-        <RenderComments comments={props.comments} dishId={props.dish.id} addComment={props.addComment} />
+    );
+  } else if (props.dishErr != null) {
+    return <h1> {props.dishErr} </h1>;
+  } else {
+    return (
+      <div className="container">
+        <div className="row mt-2">
+          <Breadcrumb className="w-100">
+            <BreadcrumbItem>
+              <Link to="/home">Home</Link>
+            </BreadcrumbItem>
+            <BreadcrumbItem>
+              <Link to="/menu">Menu</Link>
+            </BreadcrumbItem>
+            <BreadcrumbItem active>{props.dish.name}</BreadcrumbItem>
+          </Breadcrumb>
+          <div className="col-12">
+            <h3> {props.dish.name}</h3>
+            <hr />
+          </div>
+        </div>
+        <div className="row">
+          <RenderDish dish={props.dish} />
+          <RenderComments
+            comments={props.comments}
+            err={props.commentsErr}
+            dishId={props.dish.id}
+            addComment={props.addComment}
+          />
+        </div>
       </div>
-    </div>
-  );
+    );
   }
 };
 

@@ -10,7 +10,7 @@ import {
 } from "reactstrap";
 
 // redux-form
-import { Control, LocalForm, Errors } from "react-redux-form";
+import { Control, Form, Errors } from "react-redux-form";
 
 // --- validators
 const required = val => val && val.length
@@ -29,6 +29,7 @@ class Contact extends Component {
   handleSubmit(values) {
     let go = JSON.stringify(values);
     alert(go);
+    this.props.resetFeedbackForm()
   }
 
   render() {
@@ -96,7 +97,8 @@ class Contact extends Component {
           <div className="col-12">
             <h3> Send us Your Feedback </h3>
           </div>
-          <LocalForm
+          <Form
+          model="feedback"
             onSubmit={(values) => this.handleSubmit(values)}
             className="col-12 col-md-9"
           >
@@ -272,7 +274,7 @@ class Contact extends Component {
                 <Button type="submit">Send Feedback</Button>
               </Col>
             </FormGroup>
-          </LocalForm>
+          </Form>
         </div>
       </div>
     );

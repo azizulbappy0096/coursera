@@ -7,6 +7,7 @@ import {
   CardText,
   CardTitle,
 } from "reactstrap";
+import { baseUrl } from "../redux/baseUrl";
 import { Loading } from "./LoadingComponent";
 
 const RenderCard = ({ item, isLoading, err }) => {
@@ -23,7 +24,7 @@ const RenderCard = ({ item, isLoading, err }) => {
     return (
       <div className="col-12 col-md m-1">
         <Card>
-          <CardImg src={item.image} alt={item.name} />
+          <CardImg src={`${baseUrl}/${item.image}`} alt={item.name} />
           <CardBody>
             <CardTitle>{item.name}</CardTitle>
 
@@ -38,7 +39,7 @@ const RenderCard = ({ item, isLoading, err }) => {
   }
 };
 
-function Home({ dish,dishLoading, dishErr, leader, promotion }) {
+function Home({ dish, dishLoading, dishErr, leader, promotion, promotionsLoading, promotionsErr }) {
   return (
     <div className="container">
       <div className="row">
@@ -47,7 +48,8 @@ function Home({ dish,dishLoading, dishErr, leader, promotion }) {
           isLoading={dishLoading}
           err={dishErr}
         />
-        <RenderCard item={promotion} />
+        <RenderCard item={promotion} isLoading={promotionsLoading}
+          err={promotionsErr} /> 
         <RenderCard item={leader} />
       </div>
     </div>

@@ -8,13 +8,14 @@ import {
   Breadcrumb,
   BreadcrumbItem,
 } from "reactstrap";
+import { baseUrl } from "../redux/baseUrl";
 import { Loading } from "./LoadingComponent";
 
 const RenderMenuItem = ({ dish }) => {
   return (
     <Card>
       <Link to={`/menu/${dish.id}`}>
-        <CardImg width="100%" src={dish.image} atl={dish.name} />
+        <CardImg width="100%" src={ baseUrl + "/" + dish.image} atl={dish.name} />
         <CardImgOverlay>
           <CardTitle>{dish.name}</CardTitle>
         </CardImgOverlay>
