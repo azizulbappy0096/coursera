@@ -114,7 +114,7 @@ class Contact extends Component {
               >
                 <i className="fa fa-phone"></i> Call
               </a>
-              <a role="button" className="btn btn-info" href="">
+              <a role="button" className="btn btn-info" href="/">
                 <i className="fa fa-skype"></i> Skype
               </a>
               <a
@@ -142,7 +142,8 @@ class Contact extends Component {
                 First Name{" "}
               </Label>
               <Col md={10}>
-                <Control.text
+                <Control
+                type="text"
                   id="firstname"
                   model=".firstname"
                   placeholder="First name"
@@ -171,7 +172,8 @@ class Contact extends Component {
                 Last Name{" "}
               </Label>
               <Col md={10}>
-                <Control.text
+                <Control
+                type="text"
                   id="lastname"
                   model=".lastname"
                   placeholder="Last name"
@@ -228,8 +230,8 @@ class Contact extends Component {
                 E-mail{" "}
               </Label>
               <Col md={10}>
-                <Control.text
-                  
+                <Control
+                  type="email"
                   id="email"
                   model=".email"
                   placeholder="E-mail address"
@@ -254,7 +256,8 @@ class Contact extends Component {
               <Col md={{ size: 6, offset: 2 }}>
                 <FormGroup check>
                   <Label check>
-                    <Control.checkbox
+                    <Control
+                    type="checkbox"
                       model=".agree"
                       className="form-check-input"
                     />
@@ -264,7 +267,7 @@ class Contact extends Component {
               </Col>
               <Col md={{ size: 3, offset: 1 }}>
                 <FormGroup>
-                  <Control.select
+                  <Control.select // eslint-disable-line
                     defaultValue="tel"
                     model=".contactType"
                     className="form-control"
@@ -280,7 +283,7 @@ class Contact extends Component {
                 Your Feedback
               </Label>
               <Col md={10}>
-                <Control.textarea
+                <Control.textarea // eslint-disable-line
                   rows="12"
                   id="message"
                   model=".message"

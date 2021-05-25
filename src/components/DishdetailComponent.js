@@ -135,7 +135,7 @@ class CommentForm extends Component {
             <LocalForm onSubmit={(val) => this.handleSubmit(val)}>
               <div className="form-group">
                 <Label for="rating"> Rating </Label>
-                <Control.select
+                <Control.select // eslint-disable-line
                   model=".rating"
                   id="rating"
                   defaultValue="1"
@@ -150,7 +150,8 @@ class CommentForm extends Component {
               </div>
               <div className="form-group">
                 <Label for="author"> Your Name </Label>
-                <Control.text
+                <Control
+                type="text"
                   model=".author"
                   id="author"
                   placeholder="Your Name"
@@ -174,7 +175,7 @@ class CommentForm extends Component {
               </div>
               <div className="form-group">
                 <Label for="comment"> Comment </Label>
-                <Control.textarea
+                <Control.textarea // eslint-disable-line
                   rows="6"
                   model=".comment"
                   id="comment"
