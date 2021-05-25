@@ -10,11 +10,17 @@ import Contact from "./ContactComponent";
 import DishDetail from "./DishdetailComponent";
 import About from "./AboutComponent";
 
+// react transition
+import {
+CSSTransition,
+TransitionGroup
+} from 'react-transition-group';
+
 // redux
 import { connect } from "react-redux";
 
 // actions
-import { addComment, fetchDishes, fetchComments, fetchPromotions } from "../redux/ActionCreators"
+import { postComment, fetchDishes, fetchComments, fetchPromotions, fetchLeaders } from "../redux/ActionCreators"
 import { actions } from "react-redux-form"
 
 const mapStateToProps = (state) => ({
@@ -25,10 +31,13 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  addComment: (dishId, rating, author, comment) => dispatch(addComment(dishId, rating, author, comment)),
+  postComment: (dishId, rating, author, comment) => dispatch((dispatch) => {
+    postComment(dispatch, dishId, rating, author, comment)
+  }),
   fetchDishes: () => dispatch(fetchDishes()),
   fetchComments: () => dispatch(fetchComments()),
   fetchPromotions: () => dispatch(fetchPromotions()),
+  fetchLeaders: () => dispatch(fetchLeaders()),
   resetFeedbackForm: () => dispatch(actions.reset("feedback"))
 })
 
@@ -42,21 +51,25 @@ class Main extends React.Component {
     this.props.fetchDishes()
     this.props.fetchComments()
     this.props.fetchPromotions()
+    this.props.fetchLeaders()
   }
 
   render() {
     const HomePage = () => {
       return (
         <Home
-          dish={this.props.dishes.dishes.filter((dish) => dish.featured)[0]}
-          dishLoading={this.props.dishes.isLoading}
+        dishLoading={this.props.dishes.isLoading}
           dishErr={this.props.dishes.error}
-          leader={this.props.leaders.filter((leader) => leader.featured)[0]}
+          dish={this.props.dishes.dishes.filter((dish) => dish.featured)[0]}
+          leadersLoading={this.props.leaders.isLoading}
+          leadersErr={this.props.leaders.error}
+          leader={this.props.leaders.leaders.filter((leader) => leader.featured)[0]}
+          promotionsLoading={this.props.promotions.isLoading}
+          promotionsErr={this.props.promotions.error}
           promotion={
             this.props.promotions.promotions.filter((promotion) => promotion.featured)[0]
           }
-          promotionsLoading={this.props.promotions.isLoading}
-          promotionsErr={this.props.promotions.error}
+          
         />
       );
     };
@@ -84,19 +97,22 @@ class Main extends React.Component {
             (cmnt) => cmnt.dishId === Number(match.params.dishId)
           )}
           commentsErr={this.props.comments.error}
-          addComment={this.props.addComment}
+          postComment={this.props.postComment}
         />
       );
     };
 
     const AboutPage = () => {
-      return <About leaders={this.props.leaders} />;
+      return <About leadersLoading={this.props.leaders.isLoading}
+      leadersErr={this.props.leaders.error} leaders={this.props.leaders.leaders} />;
     };
 
     return (
       <div className="">
         <Header />
-        <Switch>
+       <TransitionGroup>
+         <CSSTransition key={this.props.location.key} classNames="page" timeout={300}>
+         <Switch>
           <Route path="/home" component={HomePage} />
           <Route exact path="/aboutus" component={AboutPage} />
           <Route exact path="/menu" component={MenuPage} />
@@ -104,6 +120,8 @@ class Main extends React.Component {
           <Route exact path="/contactus" component={ContactPage} />
           <Redirect to="/home" />
         </Switch>
+        </CSSTransition>
+       </TransitionGroup>
         <Footer />
       </div>
     );

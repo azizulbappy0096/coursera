@@ -11,6 +11,7 @@ import {
 
 // redux-form
 import { Control, Form, Errors } from "react-redux-form";
+import { baseUrl } from "../redux/baseUrl";
 
 // --- validators
 const required = val => val && val.length
@@ -27,9 +28,42 @@ class Contact extends Component {
   }
 
   handleSubmit(values) {
-    let go = JSON.stringify(values);
-    alert(go);
-    this.props.resetFeedbackForm()
+
+    fetch(baseUrl + "/feedback", {
+      method: "POST",
+      body: JSON.stringify({
+        ...values,
+        date: new Date().toISOString()
+      }),
+      headers: {
+        "Content-type": "application/json"
+      },
+      credentials: "same-origin"
+    })
+    .then(
+      (res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        let error = new Error(`Error ${res.status}: ${res.statusText}`);
+        error.response = res
+        throw error;
+      },
+      (netError) => {
+        let error = new Error(netError.message);
+        throw error;
+      }
+    )
+    .then((feedback) => {
+      console.log(feedback)
+      alert("Thank you for your feedbak\n" + JSON.stringify(feedback))
+      this.props.resetFeedbackForm()
+    })
+    .catch((error) => {
+      console.log('post feedback', error.message);
+      alert('Your feedback could not be posted\nError: '+ error.message);
+    });
+    
   }
 
   render() {
@@ -161,15 +195,15 @@ class Contact extends Component {
               </Col>
             </FormGroup>
             <FormGroup row>
-              <Label for="contactTel" md={2}>
+              <Label for="telnum" md={2}>
                 {" "}
                 Contact Tel.{" "}
               </Label>
               <Col md={10}>
                 <Control
                   type="tel"
-                  id="contactTel"
-                  model=".contactTel"
+                  id="telnum"
+                  model=".telnum"
                   placeholder="Tel. number"
                   className="form-control"
                   validators={{
@@ -179,7 +213,7 @@ class Contact extends Component {
                 />
                 <Errors
                 className="text-danger"
-                model=".contactTel"
+                model=".telnum"
                 show="touched"
                 messages={{
                   required: 'Required',
@@ -221,7 +255,7 @@ class Contact extends Component {
                 <FormGroup check>
                   <Label check>
                     <Control.checkbox
-                      model=".contactMe"
+                      model=".agree"
                       className="form-check-input"
                     />
                     <strong> May we contact you? </strong>

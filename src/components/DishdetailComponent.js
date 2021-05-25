@@ -14,6 +14,7 @@ import {
   ModalBody,
   ModalHeader,
 } from "reactstrap";
+import { FadeTransform, Fade, Stagger } from 'react-animation-components';
 
 // redux-form
 import { Control, Errors, LocalForm } from "react-redux-form";
@@ -30,6 +31,11 @@ const RenderDish = ({ dish }) => {
   if (dish != null) {
     return (
       <div className="col-12 col-md-5 mt-5 mx-auto">
+        <FadeTransform
+                in
+                transformProps={{
+                    exitTransform: 'scale(0.5) translateY(-50%)'
+                }}>
         <Card>
           <CardImg
             width="100%"
@@ -41,6 +47,7 @@ const RenderDish = ({ dish }) => {
             <CardText>{dish.description}</CardText>
           </CardBody>
         </Card>
+        </FadeTransform>
       </div>
     );
   } else {
@@ -49,7 +56,7 @@ const RenderDish = ({ dish }) => {
 };
 
 // render dish comments
-function RenderComments({ comments, err, dishId, addComment }) {
+function RenderComments({ comments, err, dishId, postComment }) {
   if (err) {
     return <h1> {err} </h1>;
   } else {
@@ -57,7 +64,10 @@ function RenderComments({ comments, err, dishId, addComment }) {
       <div className="col-12 col-md-5 mt-5 mx-auto">
         <h4> Comments </h4>
         <ul className="list-unstyled">
+        <Stagger in>
+        
           {comments?.map((cmnt) => (
+            <Fade in>
             <li key={cmnt.id} className="mb-4">
               <p className="m-0"> {cmnt.comment} </p>
               <small>
@@ -72,10 +82,14 @@ function RenderComments({ comments, err, dishId, addComment }) {
                 }).format(new Date(cmnt.date))}{" "}
               </small>
             </li>
+            </Fade>
           ))}
+          <Fade in>
           <li>
-            <CommentForm dishId={dishId} addComment={addComment} />
+            <CommentForm dishId={dishId} postComment={postComment} />
           </li>
+          </Fade>
+          </Stagger>
         </ul>
       </div>
     );
@@ -99,7 +113,7 @@ class CommentForm extends Component {
   }
 
   handleSubmit(val) {
-    this.props.addComment(
+    this.props.postComment(
       this.props.dishId,
       val.rating,
       val.author,
@@ -218,7 +232,7 @@ const DishDetail = (props) => {
             comments={props.comments}
             err={props.commentsErr}
             dishId={props.dish.id}
-            addComment={props.addComment}
+            postComment={props.postComment}
           />
         </div>
       </div>

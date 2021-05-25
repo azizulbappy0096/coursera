@@ -9,6 +9,7 @@ import {
 } from "reactstrap";
 import { baseUrl } from "../redux/baseUrl";
 import { Loading } from "./LoadingComponent";
+import { FadeTransform } from 'react-animation-components';
 
 const RenderCard = ({ item, isLoading, err }) => {
   if (isLoading) {
@@ -23,6 +24,11 @@ const RenderCard = ({ item, isLoading, err }) => {
   } else {
     return (
       <div className="col-12 col-md m-1">
+          <FadeTransform
+                in
+                transformProps={{
+                    exitTransform: 'scale(0.5) translateY(-50%)'
+                }}>
         <Card>
           <CardImg src={`${baseUrl}/${item.image}`} alt={item.name} />
           <CardBody>
@@ -34,12 +40,13 @@ const RenderCard = ({ item, isLoading, err }) => {
             <CardText> {item.description} </CardText>
           </CardBody>
         </Card>
+        </FadeTransform>
       </div>
     );
   }
 };
 
-function Home({ dish, dishLoading, dishErr, leader, promotion, promotionsLoading, promotionsErr }) {
+function Home({ dish, dishLoading, dishErr, leader, leadersLoading, leadersErr, promotion, promotionsLoading, promotionsErr }) {
   return (
     <div className="container">
       <div className="row">
@@ -50,7 +57,8 @@ function Home({ dish, dishLoading, dishErr, leader, promotion, promotionsLoading
         />
         <RenderCard item={promotion} isLoading={promotionsLoading}
           err={promotionsErr} /> 
-        <RenderCard item={leader} />
+        <RenderCard item={leader} isLoading={leadersLoading}
+          err={leadersErr} />
       </div>
     </div>
   );

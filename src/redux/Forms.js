@@ -2,9 +2,9 @@
 export const initialFeedbackForm = {
     firstname: "",
     lastname: "",
-    contactTel: "",
+    telnum: "",
     email: "",
-    contactMe: false,
+    agree: false,
     contactType: "tel",
-    message: ""
+    message: "",
 }

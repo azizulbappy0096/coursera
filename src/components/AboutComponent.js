@@ -8,20 +8,41 @@ import {
   Media,
 } from "reactstrap";
 import { Link } from "react-router-dom";
+import { Loading } from "./LoadingComponent";
+import { baseUrl } from "../redux/baseUrl";
+import { Fade, Stagger } from "react-animation-components";
 
-const RenderLeader = ({ leader }) => {
-  return (
-    <Media tag="li" className="my-5">
-      <Media left>
-        <Media object src={leader.image} alt={leader.name} />
+const RenderLeader = ({ leaders, isLoading, err }) => {
+  if (isLoading) {
+    return <Loading addClass="align-self-center" />;
+  } else if (err != null) {
+    return <h1> {err} </h1>;
+  } else {
+    return (
+      <Media list>
+        <Stagger in>
+          {leaders.map((leader) => (
+            <Fade in>
+              <Media key={leader.id} tag="li" className="my-5">
+                <Media left>
+                  <Media
+                    object
+                    src={baseUrl + "/" + leader.image}
+                    alt={leader.name}
+                  />
+                </Media>
+                <Media body className="ml-4">
+                  <Media heading>{leader.name}</Media>
+                  <h6 className="mb-3"> {leader.designation} </h6>
+                  <p>{leader.description}</p>
+                </Media>
+              </Media>
+            </Fade>
+          ))}
+        </Stagger>
       </Media>
-      <Media body className="ml-4">
-        <Media heading>{leader.name}</Media>
-        <h6 className="mb-3"> {leader.designation} </h6>
-        <p>{leader.description}</p>
-      </Media>
-    </Media>
-  );
+    );
+  }
 };
 
 function About(props) {
@@ -101,11 +122,11 @@ function About(props) {
           <h2>Corporate Leadership</h2>
         </div>
         <div className="col-12">
-          <Media list>
-            {props.leaders.map((leader) => (
-              <RenderLeader key={leader.id} leader={leader} />
-            ))}
-          </Media>
+          <RenderLeader
+            leaders={props.leaders}
+            isLoading={props.leadersLoading}
+            err={props.leadersErr}
+          />
         </div>
       </div>
     </div>
