@@ -39,7 +39,7 @@ dishRouter
     Dishes.deleteMany({})
       .then(
         (resp) => {
-          res.statusCode = 201;
+          res.statusCode = 200;
           res.setHeader("Content-Type", "application/json");
           res.json(resp);
         },
