@@ -6,7 +6,8 @@ var Currency = mongoose.Types.Currency
 const PromoSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     image: {
         type: String,

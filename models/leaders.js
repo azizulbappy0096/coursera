@@ -4,6 +4,7 @@ const LeaderSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true
+        // human name shouldn't be unique
     },
     image: {
         type: String,

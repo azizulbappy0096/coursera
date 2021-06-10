@@ -3,6 +3,8 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var session = require("express-session")
+var sessionStore = require("session-file-store")(session)
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -12,7 +14,7 @@ var leaderRouter = require('./routes/leaderRouter');
 
 var app = express();
 
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 const url = "mongodb://localhost:27017/confusion"
 
 mongoose.connect(url, {
@@ -31,7 +33,54 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+// app.use(cookieParser("12345-09876-54321-67890"));
+app.use(session({
+  name: "session-id",
+  secret: "12345-09876-54321-67890",
+  resave: false,
+  saveUninitialized: false,
+  store: new sessionStore()
+}))
+
+const auth = (req, res, next) => {
+  console.log(req.session)
+
+  if(!req.session.user) {
+    let authHeader = req.headers.authorization
+    if(!authHeader) {
+      let err = new Error("You are not authenticated!")
+      err.status = 401
+      res.setHeader("WWW-Authenticate", "Basic")
+      return next(err)
+    }
+  
+    let auth = new Buffer.from(authHeader.split(" ")[1], "base64").toString().split(":")
+    let username = auth[0]
+    let password = auth[1]
+    // console.log( new Buffer.from(authHeader.split(" ")[1], "base64"))
+    // console.log( new Buffer.from(authHeader.split(" ")[1], "base64").toString())
+    // console.log(auth)
+    if(username === "admin" && password === "admin") {
+      req.session.user = "admin"
+      next()
+    }else {
+      let err = new Error("You are not authenticated!")
+      err.status = 401
+      res.setHeader("WWW-Authenticate", "Basic")
+      next(err)
+    }
+  }else {
+    if(req.session.user === "admin") {
+      next()
+    }else {
+      let err = new Error("You are not authenticated!")
+      err.status = 401
+      next(err)
+    }
+  }
+} 
+
+app.use(auth)
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
