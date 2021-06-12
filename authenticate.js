@@ -41,4 +41,14 @@ exports.jwtPassport = passport.use(new JWTStrategy(opts, (payload, done) => {
 }))
 
 exports.verifyToken = passport.authenticate("jwt", { session: false })
-
+exports.verifyAdmin = (req, res, next) => {
+    console.log("From verifyAdmin", req.user)
+    User.findById(req.user.id).then(user => {
+        if(!user.admin) {
+            let err = new Error("You are not authorized to perform this operation!")
+            err.status = 403
+            return next(err)
+        }
+        next()
+    }).catch(err => next(err))
+}
