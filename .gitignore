@@ -2,3 +2,6 @@
 sessions/
 .env
 /.vscode
+*.pem
+*.csr
+*.key

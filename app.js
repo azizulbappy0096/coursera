@@ -16,6 +16,7 @@ var usersRouter = require("./routes/users");
 var dishRouter = require("./routes/dishRouter");
 var promoRouter = require("./routes/promoRouter");
 var leaderRouter = require("./routes/leaderRouter");
+var uploadRouter = require("./routes/uploadRouter");
 
 var app = express();
 
@@ -45,6 +46,15 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// --- secure traffic
+app.all("*", (req, res, next) => {
+  if(req.secure) {
+    next()
+  }else {
+    res.redirect(307, `https://${req.hostname}:${app.get("securePort")}${req.url}`)
+  }
+})
+
 // --- cookies and session (start)
 // app.use(cookieParser("12345-09876-54321-67890"));
 // app.use(
@@ -72,6 +82,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/dishes", dishRouter);
 app.use("/promotions", promoRouter);
 app.use("/leaders", leaderRouter);
+app.use("/imageUpload", uploadRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
