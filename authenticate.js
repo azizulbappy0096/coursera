@@ -8,6 +8,7 @@ const jwt = require("jsonwebtoken")
 const LocalStrategy = require("passport-local").Strategy
 const JWTStrategy = require("passport-jwt").Strategy
 const ExtractJWT = require("passport-jwt").ExtractJwt
+const FacebookStrategy = require("passport-facebook-token")
 
 // --- local strategy configure
 exports.Local = passport.use(new LocalStrategy(User.authenticate()))
@@ -42,7 +43,6 @@ exports.jwtPassport = passport.use(new JWTStrategy(opts, (payload, done) => {
 
 exports.verifyToken = passport.authenticate("jwt", { session: false })
 exports.verifyAdmin = (req, res, next) => {
-    console.log("From verifyAdmin", req.user)
     User.findById(req.user.id).then(user => {
         if(!user.admin) {
             let err = new Error("You are not authorized to perform this operation!")
@@ -52,3 +52,27 @@ exports.verifyAdmin = (req, res, next) => {
         next()
     }).catch(err => next(err))
 }
+
+// --- Facebook strategy config 
+exports.facebookPassport = passport.use(new FacebookStrategy({
+    clientID: config.facebook.clientId,
+    clientSecret: config.facebook.clientSecret
+    },
+    (accessToken, refreshToken, profile, cb) => {
+        User.findOne({ facebookId: profile.id })
+        .then(user => {
+            if(user !== null) {
+                return user
+            }else {
+                return User.create({
+                    facebookId: profile.id,
+                    firstname: profile.name.givenName,
+                    lastname: profile.name.familyName,
+                })
+            }
+        }).then(user => {
+            cb(null, user)
+        }).catch(err => cb(err, false))
+    }
+))
+

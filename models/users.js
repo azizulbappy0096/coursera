@@ -2,6 +2,9 @@ const mongoose = require("mongoose")
 const passportLocalMongoose = require("passport-local-mongoose")
 
 const UserSchema = new mongoose.Schema({
+    facebookId: {
+        type: String,
+    },
     firstname: {
         type: String,
         required: true
