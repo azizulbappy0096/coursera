@@ -31,6 +31,17 @@ export const Dishes = (
         error: null,
         dishes: action.payload,
       };
+      case ActionTypes.UPADTE_DISH:
+        let index = state.dishes.findIndex(dish => dish._id === action.payload._id)
+        let newDish = state.dishes
+        newDish[index].comments = action.payload.comments
+        console.log(newDish)
+        return {
+          ...state,
+          isLoading: false,
+          error: null,
+          dishes: newDish
+        };
     default:
       return state;
   }

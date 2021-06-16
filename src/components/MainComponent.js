@@ -20,7 +20,7 @@ TransitionGroup
 import { connect } from "react-redux";
 
 // actions
-import { postComment, fetchDishes, fetchComments, fetchPromotions, fetchLeaders } from "../redux/ActionCreators"
+import { postComment, fetchDishes, fetchComments, fetchPromotions, fetchLeaders, login, logout } from "../redux/ActionCreators"
 import { actions } from "react-redux-form"
 
 const mapStateToProps = (state) => ({
@@ -28,24 +28,25 @@ const mapStateToProps = (state) => ({
   comments: state.comments,
   leaders: state.leaders,
   promotions: state.promotions,
+  auth: state.auth
 });
 
 const mapDispatchToProps = dispatch => ({
-  postComment: (dishId, rating, author, comment) => dispatch((dispatch) => {
-    postComment(dispatch, dishId, rating, author, comment)
+  postComment: (dishId, rating, comment) => dispatch((dispatch) => {
+    postComment(dispatch, dishId, rating, comment)
   }),
   fetchDishes: () => dispatch(fetchDishes()),
-  fetchComments: () => dispatch(fetchComments()),
   fetchPromotions: () => dispatch(fetchPromotions()),
   fetchLeaders: () => dispatch(fetchLeaders()),
-  resetFeedbackForm: () => dispatch(actions.reset("feedback"))
+  resetFeedbackForm: () => dispatch(actions.reset("feedback")),
+  login: (creds) => dispatch(login(creds)),
+  logout: () => dispatch(logout())
 })
 
 class Main extends React.Component {
 
   componentDidMount() {
     this.props.fetchDishes()
-    this.props.fetchComments()
     this.props.fetchPromotions()
     this.props.fetchLeaders()
   }
@@ -84,15 +85,11 @@ class Main extends React.Component {
         <DishDetail
           dish={
             this.props.dishes.dishes.filter(
-              (dish) => dish.id === Number(match.params.dishId)
+              (dish) => dish._id === match.params.dishId
             )[0]
           }
           isLoading={this.props.dishes.isLoading}
           dishErr={this.props.dishes.error}
-          comments={this.props.comments.comments.filter(
-            (cmnt) => cmnt.dishId === Number(match.params.dishId)
-          )}
-          commentsErr={this.props.comments.error}
           postComment={this.props.postComment}
         />
       );
@@ -105,7 +102,7 @@ class Main extends React.Component {
 
     return (
       <div className="">
-        <Header />
+        <Header auth={this.props.auth} login={this.props.login} logout={this.props.logout} />
        <TransitionGroup>
          <CSSTransition key={this.props.location.key} classNames="page" timeout={300}>
          <Switch>

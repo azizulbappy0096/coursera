@@ -1,5 +1,5 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import React, { Component, useEffect } from "react";
+import { Link, withRouter } from "react-router-dom";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -15,6 +15,11 @@ import {
   ModalHeader,
 } from "reactstrap";
 import { FadeTransform, Fade, Stagger } from 'react-animation-components';
+
+// redux
+import { connect } from "react-redux";
+
+import { fetchComments } from "../redux/ActionCreators"
 
 // redux-form
 import { Control, Errors, LocalForm } from "react-redux-form";
@@ -56,10 +61,8 @@ const RenderDish = ({ dish }) => {
 };
 
 // render dish comments
-function RenderComments({ comments, err, dishId, postComment }) {
-  if (err) {
-    return <h1> {err} </h1>;
-  } else {
+function RenderComments({ comments, dishId, postComment }) {
+
     return (
       <div className="col-12 col-md-5 mt-5 mx-auto">
         <h4> Comments </h4>
@@ -68,18 +71,18 @@ function RenderComments({ comments, err, dishId, postComment }) {
         
           {comments?.map((cmnt) => (
             <Fade in>
-            <li key={cmnt.id} className="mb-4">
+            <li key={cmnt._id} className="mb-4">
               <p className="m-0"> {cmnt.comment} </p>
               <small>
                 {" "}
-                -- {cmnt.author} ||{" "}
+                -- {cmnt.author.username} ||{" "}
                 {new Intl.DateTimeFormat("en-BD", {
                   year: "numeric",
                   month: "short",
                   day: "2-digit",
                   hour: "2-digit",
                   minute: "2-digit",
-                }).format(new Date(cmnt.date))}{" "}
+                }).format(new Date(cmnt.createdAt))}{" "}
               </small>
             </li>
             </Fade>
@@ -93,7 +96,7 @@ function RenderComments({ comments, err, dishId, postComment }) {
         </ul>
       </div>
     );
-  }
+  
 }
 
 // comment form for dish
@@ -116,7 +119,6 @@ class CommentForm extends Component {
     this.props.postComment(
       this.props.dishId,
       val.rating,
-      val.author,
       val.comment
     );
     this.toggleModal();
@@ -195,7 +197,16 @@ class CommentForm extends Component {
 }
 
 // dishDetail component
+// const mapStateToProps = (state) => ({
+//   comments: state.comments
+// });
+
+// const mapDispatchToProps = dispatch => ({
+//   fetchComments: (dishId) => dispatch(fetchComments(dishId)),
+// })
+
 const DishDetail = (props) => {
+
   if (props.isLoading) {
     return (
       <div
@@ -212,6 +223,7 @@ const DishDetail = (props) => {
   } else {
     return (
       <div className="container">
+        {console.log("from dishdetail",props)}
         <div className="row mt-2">
           <Breadcrumb className="w-100">
             <BreadcrumbItem>
@@ -230,9 +242,8 @@ const DishDetail = (props) => {
         <div className="row">
           <RenderDish dish={props.dish} />
           <RenderComments
-            comments={props.comments}
-            err={props.commentsErr}
-            dishId={props.dish.id}
+          comments={props.dish.comments}
+            dishId={props.dish._id}
             postComment={props.postComment}
           />
         </div>

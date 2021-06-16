@@ -8,20 +8,19 @@ const addComment = (comment) => ({
   payload: comment
 });
 
-export const postComment = (dispatch, dishId, rating, author, comment) => {
+export const postComment = (dispatch, dishId, rating, comment) => {
   let newComment = {
-    dishId,
     rating,
-    author,
     comment,
   }
-  newComment.date = new Date().toISOString();
 
-  fetch(baseUrl + "/comments", {
+  const bearer = `Bearer ${localStorage.getItem("token")}`
+  fetch(`${baseUrl}/dishes/${dishId}/comments`, {
     method: "POST",
     body: JSON.stringify(newComment),
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
+      "Authorization": bearer
     },
     credentials: "same-origin"
   })
@@ -39,15 +38,17 @@ export const postComment = (dispatch, dishId, rating, author, comment) => {
       throw error;
     }
   )
-  .then((comment) => dispatch(addComment(comment)))
+  .then((dish) => {
+    dispatch(updateDishes(dish))
+  })
   .catch((error) => {
     console.log('post comments', error.message);
     alert('Your comment could not be posted\nError: '+ error.message);
   });
 }
 
-export const fetchComments = () => (dispatch) => {
-  fetch(`${baseUrl}/comments`)
+export const fetchComments = (dishId) => (dispatch) => {
+  fetch(`${baseUrl}/dishes/${dishId}/comments`)
     .then(
       (res) => {
         if (res.ok) {
@@ -62,7 +63,9 @@ export const fetchComments = () => (dispatch) => {
         throw error;
       }
     )
-    .then((comments) => dispatch(addComments(comments)))
+    .then((comments) =>{
+      console.log("from action asdqwedssasad",comments)
+      dispatch(addComment(comments))})
     .catch((error) => {
       dispatch(failedComments(error.message));
     });
@@ -73,10 +76,6 @@ const failedComments = (err) => ({
   payload: err,
 });
 
-const addComments = (comments) => ({
-  type: ActionTypes.ADD_COMMENTS,
-  payload: comments,
-});
 
 // dishes
 export const fetchDishes = () => (dispatch) => {
@@ -102,6 +101,11 @@ export const fetchDishes = () => (dispatch) => {
       dispatch(failedDishes(error.message));
     });
 };
+
+const updateDishes = (dish) => ({
+  type: ActionTypes.UPADTE_DISH,
+  payload: dish
+})
 
 const loadingDishes = () => ({
   type: ActionTypes.LOADING_DISHES,
@@ -192,3 +196,71 @@ const addLeaders = (leaders) => ({
   type: ActionTypes.ADD_LEADERS,
   payload: leaders,
 });
+
+// auth
+export const login = (creds) => (dispatch) => {
+  dispatch(requestLogin(creds))
+
+  fetch(`${baseUrl}/users/login`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(creds)
+  })
+  .then(res => {
+    if(res.ok) {
+      return res.json()
+    }
+
+    let error = new Error(`Error ${res.status} : ${res.statusText}`)
+    error.response = res
+    throw error
+  }, error => {throw error})
+  .then(jsonRes => {
+    if(jsonRes.success) {
+      localStorage.setItem("token", jsonRes.token)
+      localStorage.setItem("creds", creds)
+      dispatch(successLogin(jsonRes.token))
+    }
+  })
+  .catch(err => {
+    dispatch(failedLogin(err.message))
+  })
+}
+
+export const logout = () => (dispatch) => {
+  dispatch(requestLogout())
+  localStorage.removeItem("token")
+  localStorage.removeItem("creds")
+  dispatch(successLogout())
+}
+
+const successLogin = (token) => ({
+  type: ActionTypes.SUCCESS_LOGIN,
+  payload: {
+    token: token
+  }
+})
+
+const requestLogin = (creds) => ({
+  type: ActionTypes.REQUEST_LOGIN,
+  payload: {
+    creds
+  }
+})
+
+const failedLogin = (err) => ({
+  type: ActionTypes.FAILED_LOGIN,
+  payload: {
+    error: err
+  }
+})
+
+const successLogout = () => ({
+  type: ActionTypes.SUCCESS_LOGOUT,
+})
+
+const requestLogout = () => ({
+  type: ActionTypes.REQUEST_LOGOUT
+})

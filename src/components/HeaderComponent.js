@@ -28,6 +28,7 @@ export default class Header extends Component {
     this.toggleNavbar = this.toggleNavbar.bind(this);
     this.toggleModal = this.toggleModal.bind(this);
     this.handleLogin = this.handleLogin.bind(this);
+    this.handleLogout = this.handleLogout.bind(this);
   }
 
   toggleNavbar() {
@@ -41,10 +42,18 @@ export default class Header extends Component {
     });
   }
   handleLogin(e) {
-    e.preventDefault()
+    e.preventDefault();
     this.toggleModal();
-    let go = `username: ${this.username.value}, password: ${this.password.value}, remember: ${this.remember.checked}`
-    alert(go)
+
+    this.props.login({
+      username: this.username.value,
+      password: this.password.value,
+    });
+  }
+
+  handleLogout(e) {
+    e.preventDefault();
+    this.props.logout()
   }
 
   render() {
@@ -86,16 +95,37 @@ export default class Header extends Component {
                   </NavLink>
                 </NavItem>
                 <NavItem>
+                  <NavLink className="nav-link" to="/favorites">
+                    <span className="fa fa-heart"></span> My Favorites
+                  </NavLink>
+                </NavItem>
+                <NavItem>
                   <NavLink to="/contactus" className="nav-link">
                     <span className="fa fa-address-card"></span>
                     Contact Us
                   </NavLink>
                 </NavItem>
                 <NavItem>
-                  <Button outline className="ml-4" onClick={this.toggleModal}>
-                    <span className="fa fa-sign-in"></span>
-                    Login
-                  </Button>
+                  {!this.props.auth.isAuthenticated ? (
+                    <Button outline onClick={this.toggleModal}>
+                      <span className="fa fa-sign-in"></span> Login
+                      {this.props.auth.isFetching ? (
+                        <span className="fa fa-spinner fa-pulse fa-fw"></span>
+                      ) : null}
+                    </Button>
+                  ) : (
+                    <div>
+                      <div className="navbar-text mr-3">
+                        {this.props.auth.user.username}
+                      </div>
+                      <Button outline onClick={this.handleLogout}>
+                        <span className="fa fa-sign-out fa-lg"></span> Logout
+                        {this.props.auth.isFetching ? (
+                          <span className="fa fa-spinner fa-pulse fa-fw"></span>
+                        ) : null}
+                      </Button>
+                    </div>
+                  )}
                 </NavItem>
               </Nav>
             </Collapse>
@@ -121,15 +151,27 @@ export default class Header extends Component {
             <Form onSubmit={this.handleLogin}>
               <FormGroup>
                 <Label for="username"> Username </Label>
-                <Input type="text" id="username" innerRef={(e) => this.username = e} />
+                <Input
+                  type="text"
+                  id="username"
+                  innerRef={(e) => (this.username = e)}
+                />
               </FormGroup>
               <FormGroup>
                 <Label for="password"> Password </Label>
-                <Input type="password" id="password" innerRef={(e) => this.password = e} />
+                <Input
+                  type="password"
+                  id="password"
+                  innerRef={(e) => (this.password = e)}
+                />
               </FormGroup>
               <FormGroup check>
                 <Label check>
-                  <Input type="checkbox" name="remember" innerRef={(e) => this.remember = e} />
+                  <Input
+                    type="checkbox"
+                    name="remember"
+                    innerRef={(e) => (this.remember = e)}
+                  />
                   Remember me?
                 </Label>
               </FormGroup>

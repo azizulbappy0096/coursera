@@ -6,6 +6,7 @@ export const FAILED_COMMENTS  = "FAILED_COMMENTS"
 // dish
 export const LOADING_DISHES = "LOADING_DISHES"
 export const ADD_DISHES = "ADD_DISHES"
+export const UPADTE_DISH = "UPADTE_DISH"
 export const FAILED_DISHES  = "FAILED_DISHES"
 
 // leaders
@@ -17,3 +18,10 @@ export const FAILED_LEADERS  = "FAILED_LEADERS"
 export const LOADING_PROMOTIONS = "LOADING_PROMOTIONS"
 export const ADD_PROMOTIONS = "ADD_PROMOTIONS"
 export const FAILED_PROMOTIONS  = "FAILED_PROMOTIONS"
+
+// auth
+export const REQUEST_LOGIN = "EQUEST_LOGIN"
+export const SUCCESS_LOGIN = "SUCCESS_LOGIN"
+export const FAILED_LOGIN  = "FAILED_LOGIN"
+export const REQUEST_LOGOUT  = "REQUEST_LOGOUT"
+export const SUCCESS_LOGOUT  = "SUCCESS_LOGOUT"

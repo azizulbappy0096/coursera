@@ -14,7 +14,7 @@ import { Loading } from "./LoadingComponent";
 const RenderMenuItem = ({ dish }) => {
   return (
     <Card>
-      <Link to={`/menu/${dish.id}`}>
+      <Link to={`/menu/${dish._id}`}>
         <CardImg width="100%" src={ baseUrl + "/" + dish.image} atl={dish.name} />
         <CardImgOverlay>
           <CardTitle>{dish.name}</CardTitle>

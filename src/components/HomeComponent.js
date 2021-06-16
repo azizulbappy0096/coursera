@@ -12,6 +12,7 @@ import { Loading } from "./LoadingComponent";
 import { FadeTransform } from 'react-animation-components';
 
 const RenderCard = ({ item, isLoading, err }) => {
+
   if (isLoading) {
     return (
    

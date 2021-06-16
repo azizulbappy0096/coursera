@@ -9,6 +9,7 @@ import { Dishes } from "./Reducers/dishes"
 import { Comments } from "./Reducers/comments"
 import { Leaders } from "./Reducers/leaders"
 import { Promotions } from "./Reducers/promotions"
+import { Auth } from "./Reducers/auth"
 
 // initial state
 import { initialFeedbackForm } from "./Forms"
@@ -20,6 +21,7 @@ export const configureStore = () => {
             comments: Comments,
             leaders: Leaders,
             promotions: Promotions,
+            auth: Auth,
             ...createForms({
                 feedback: initialFeedbackForm
             })
